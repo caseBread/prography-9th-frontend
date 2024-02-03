@@ -9,7 +9,7 @@ type TProps = {
 const FoodItem: React.FC<TProps> = ({ className, meal }) => {
   return (
     <StyledWrapper className={className}>
-      <img src={meal.thumbnail} alt={meal.name} />
+      <img src={meal.thumbnail} alt={meal.name} loading="lazy" />
       <span>{meal.name}</span>
     </StyledWrapper>
   );
