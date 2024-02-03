@@ -29,6 +29,9 @@ export interface Meal {
 interface CategoryState {
   categories: string[];
   meals: Meal[];
+  sortTypeList: { value: string; label: string }[];
+  selectedSortType: string;
+  setSelectedSortType: (sortType: string) => void;
   toggleCategory: (name: string) => void;
   isCategoryExists: (name: string) => boolean;
 }
@@ -39,6 +42,29 @@ export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
   return {
     categories: [],
     meals: [],
+    sortTypeList: [
+      {
+        value: "desc",
+        label: "이름 내림차순",
+      },
+      {
+        value: "asc",
+        label: "이름 오름차순",
+      },
+    ],
+    selectedSortType: "desc",
+    setSelectedSortType: (sortType) => {
+      set((state) => {
+        const sortedMeals = [...state.meals].sort((a, b) => {
+          if (sortType === "asc") {
+            return a.name.localeCompare(b.name);
+          } else {
+            return b.name.localeCompare(a.name);
+          }
+        });
+        return { ...state, selectedSortType: sortType, meals: sortedMeals };
+      });
+    },
     toggleCategory: async (name) => {
       const isExisting = get().categories.includes(name);
       if (isExisting) {
@@ -60,15 +86,34 @@ export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
           // 데이터를 캐싱하고 저장
           mealsCache[name] = newMeals;
 
+          // 새로운 데이터를 name 기준으로 정렬하여 저장
+          const mealsToSet = [...get().meals, ...newMeals];
+          const sortedMeals = mealsToSet.sort((a, b) => {
+            if (get().selectedSortType === "asc") {
+              return a.name.localeCompare(b.name);
+            } else {
+              return b.name.localeCompare(a.name);
+            }
+          });
+
           set((state) => ({
             ...state,
-            meals: [...state.meals, ...newMeals],
+            meals: sortedMeals,
           }));
         } else {
           // 캐시에 해당 카테고리 데이터가 있으면 캐시된 데이터를 사용
+          const mealsToSet = [...get().meals, ...mealsCache[name]];
+          const sortedMeals = mealsToSet.sort((a, b) => {
+            if (get().selectedSortType === "asc") {
+              return a.name.localeCompare(b.name);
+            } else {
+              return b.name.localeCompare(a.name);
+            }
+          });
+
           set((state) => ({
             ...state,
-            meals: [...state.meals, ...mealsCache[name]],
+            meals: sortedMeals,
           }));
         }
       }
