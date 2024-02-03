@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Meal } from "../../../type/meal";
+import { Meal } from "../../../store/categoryStore";
 
 type TProps = {
   className?: string;
@@ -9,8 +9,8 @@ type TProps = {
 const FoodItem: React.FC<TProps> = ({ className, meal }) => {
   return (
     <StyledWrapper className={className}>
-      <img src={meal.strMealThumb} alt={meal.strMeal} />
-      <span>{meal.strMeal}</span>
+      <img src={meal.thumbnail} alt={meal.name} />
+      <span>{meal.name}</span>
     </StyledWrapper>
   );
 };

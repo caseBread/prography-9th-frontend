@@ -1,15 +1,31 @@
 import styled from "styled-components";
 
-type TProps = {
-  className?: string;
-  options?: string[];
+export type TDropdown = {
+  value: string;
+  label: React.ReactNode;
 };
 
-const Dropdown: React.FC<TProps> = ({ className, options }) => {
+type TProps = {
+  className?: string;
+  options: {
+    value: string;
+    label: React.ReactNode;
+  }[];
+  onSelect?: (option: any) => void;
+};
+
+const Dropdown: React.FC<TProps> = ({ className, options, onSelect }) => {
   return (
-    <StyledWrapper className={className}>
+    <StyledWrapper
+      className={className}
+      onChange={(e) => onSelect?.(e.currentTarget.value)}
+    >
       {options?.map((option) => {
-        return <option value={option}>{option}</option>;
+        return (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        );
       })}
     </StyledWrapper>
   );

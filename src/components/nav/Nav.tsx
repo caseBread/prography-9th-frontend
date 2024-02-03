@@ -1,17 +1,21 @@
 import styled from "styled-components";
 import CategoryFilter from "../feature/filter/category/CategoryFilter";
 import ItemCount from "../feature/figure/ItemCount";
-import Dropdown from "../dropdown/Dropdown";
+import Dropdown, { TDropdown } from "../dropdown/Dropdown";
+import useSortSizeStore from "../../store/sortStore";
 
 type TProps = {
   className?: string;
 };
 
-export const SORT_TYPE_LIST = ["이름 내림차순", "이름 오름차순"];
-
-export const SORT_SIZE_LIST = ["2개씩 보기", "4개씩 보기"];
+export const SORT_TYPE_LIST: TDropdown[] = [
+  { label: "이름 내림차순", value: "desc" },
+  { label: "이름 오름차순", value: "asc" },
+];
 
 const Nav: React.FC<TProps> = ({ className }) => {
+  const { sortSizeList, setSelectedSortSize } = useSortSizeStore();
+
   return (
     <StyledWrapper className={className}>
       <CategoryFilter />
@@ -19,7 +23,7 @@ const Nav: React.FC<TProps> = ({ className }) => {
         <ItemCount />
         <div className="space-between sort-wrapper">
           <Dropdown options={SORT_TYPE_LIST} />
-          <Dropdown options={SORT_SIZE_LIST} />
+          <Dropdown options={sortSizeList} onSelect={setSelectedSortSize} />
         </div>
       </div>
     </StyledWrapper>

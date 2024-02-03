@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Category } from "../../../../type/category";
-import useQueryParams from "../../../../hooks/useQueryParams";
+import { useSelectedCategoryStore } from "../../../../store/categoryStore";
 
 type TProps = {
   className?: string;
@@ -8,14 +8,16 @@ type TProps = {
 };
 
 const CategoryItem: React.FC<TProps> = ({ className, category }) => {
-  const { setQueryParam } = useQueryParams();
+  const { isCategoryExists, toggleCategory } = useSelectedCategoryStore();
 
   const onClick = () => {
-    setQueryParam("c", category.strCategory);
+    toggleCategory(category.strCategory);
   };
 
+  const isActive = isCategoryExists(category.strCategory);
+
   return (
-    <StyledWrapper className={className} onClick={onClick}>
+    <StyledWrapper className={className} onClick={onClick} isActive={isActive}>
       {category.strCategory}
     </StyledWrapper>
   );
@@ -23,13 +25,19 @@ const CategoryItem: React.FC<TProps> = ({ className, category }) => {
 
 export default CategoryItem;
 
-const StyledWrapper = styled.span`
+const StyledWrapper = styled.span<{ isActive: boolean }>`
   border: 1px solid #333;
   border-radius: 4px;
   padding: 4px 6px;
   text-align: center;
 
+  background-color: ${(props) => (props.isActive ? "#ADD8E6" : "transparent")};
+
+  &:active {
+    transform: scale(0.98);
+  }
+
   &:hover {
-    background: #f2f2f2;
+    ${(props) => (props.isActive ? "#ADD8E6" : "#f2f2f2")}
   }
 `;
