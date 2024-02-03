@@ -9,6 +9,7 @@ const fetchMealsByCategory = async (category: string) => {
     );
 
     const meals = data?.meals?.map((meal) => ({
+      id: meal.idMeal,
       name: meal.strMeal,
       thumbnail: meal.strMealThumb,
       category: category,
@@ -21,6 +22,7 @@ const fetchMealsByCategory = async (category: string) => {
 };
 
 export interface Meal {
+  id: string;
   thumbnail: string;
   name: string;
   category: string;
@@ -39,6 +41,18 @@ interface CategoryState {
 export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
   const mealsCache: Record<string, Meal[]> = {};
 
+  const sortMeals = (meals: Meal[], sortType: string) => {
+    return [...meals].sort((a, b) => {
+      if (sortType === "asc") {
+        return a.name.localeCompare(b.name);
+      } else if (sortType === "desc") {
+        return b.name.localeCompare(a.name);
+      } else {
+        return a.id.localeCompare(b.id);
+      }
+    });
+  };
+
   return {
     categories: [],
     meals: [],
@@ -51,18 +65,19 @@ export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
         value: "asc",
         label: "이름 오름차순",
       },
+      {
+        value: "latest",
+        label: "최신순",
+      },
     ],
     selectedSortType: "desc",
     setSelectedSortType: (sortType) => {
       set((state) => {
-        const sortedMeals = [...state.meals].sort((a, b) => {
-          if (sortType === "asc") {
-            return a.name.localeCompare(b.name);
-          } else {
-            return b.name.localeCompare(a.name);
-          }
-        });
-        return { ...state, selectedSortType: sortType, meals: sortedMeals };
+        return {
+          ...state,
+          selectedSortType: sortType,
+          meals: sortMeals(state.meals, sortType),
+        };
       });
     },
     toggleCategory: async (name) => {
@@ -71,7 +86,7 @@ export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
         // 카테고리 제거
         set((state) => ({
           categories: state.categories.filter((category) => category !== name),
-          meals: state.meals.filter((meal) => meal.category !== name), // meals에서 해당 카테고리 데이터 제거
+          meals: state.meals.filter((meal) => meal.category !== name),
         }));
       } else {
         set((state) => ({
@@ -80,40 +95,22 @@ export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
         }));
 
         if (!mealsCache[name]) {
-          // 캐시에 해당 카테고리 데이터가 없으면 API 호출
           const newMeals = await fetchMealsByCategory(name);
 
-          // 데이터를 캐싱하고 저장
           mealsCache[name] = newMeals;
 
-          // 새로운 데이터를 name 기준으로 정렬하여 저장
           const mealsToSet = [...get().meals, ...newMeals];
-          const sortedMeals = mealsToSet.sort((a, b) => {
-            if (get().selectedSortType === "asc") {
-              return a.name.localeCompare(b.name);
-            } else {
-              return b.name.localeCompare(a.name);
-            }
-          });
 
           set((state) => ({
             ...state,
-            meals: sortedMeals,
+            meals: sortMeals(mealsToSet, state.selectedSortType),
           }));
         } else {
-          // 캐시에 해당 카테고리 데이터가 있으면 캐시된 데이터를 사용
           const mealsToSet = [...get().meals, ...mealsCache[name]];
-          const sortedMeals = mealsToSet.sort((a, b) => {
-            if (get().selectedSortType === "asc") {
-              return a.name.localeCompare(b.name);
-            } else {
-              return b.name.localeCompare(a.name);
-            }
-          });
 
           set((state) => ({
             ...state,
-            meals: sortedMeals,
+            meals: sortMeals(mealsToSet, state.selectedSortType),
           }));
         }
       }
