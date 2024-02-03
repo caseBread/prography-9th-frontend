@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Nav from "../nav/Nav";
 import ResultList from "../feature/reaultList/ResultList";
+import { MAIN_CONTAINER_WIDTH } from "../../constants/width";
 
 type TProps = {
   className?: string;
@@ -19,5 +20,5 @@ export default Main;
 
 const StyledWrapper = styled.main`
   margin: 0 auto;
-  max-width: 1024px;
+  max-width: ${MAIN_CONTAINER_WIDTH}px;
 `;
