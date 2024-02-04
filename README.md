@@ -4,9 +4,9 @@
 
 1. `nvm use` (nvm이 없다면, node : v18.16.1 / npm v9.5.1 세팅)
 
-1. `npm install`
+2. `npm install`
 
-1. `npm start`
+3. `npm start`
 
 ## 구현 목록
 
