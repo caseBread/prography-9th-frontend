@@ -1,5 +1,13 @@
 # Prography 9th Frontend 사전과제
 
+## 로컬 실행 방법
+
+1. `nvm use` (nvm이 없다면, node : v18.16.1 / npm v9.5.1 세팅)
+
+1. `npm install`
+
+1. `npm start`
+
 ## 구현 목록
 
 1. 전체 카테고리 조회 API를 호출해 카테고리 리스트(strCategory)를 노출합니다. ✅
