@@ -1,12 +1,15 @@
 # Prography 9th Frontend 사전과제
 
 ## 로컬 실행 방법
-
-1. `nvm use` (nvm이 없다면, node : v18.16.1 / npm v9.5.1 으로 세팅 부탁드립니다.)
-
-2. `npm install`
-
-3. `npm start`
+   
+```
+git clone https://github.com/caseBread/prography-9th-frontend.git
+cd prography-9th-frontend
+nvm install
+npm install
+npm start
+```
+(nvm이 없다면, node : v18.16.1 / npm v9.5.1 으로 세팅 부탁드립니다.)
 
 ## 구현 스펙
 
