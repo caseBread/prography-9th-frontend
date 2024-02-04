@@ -7,7 +7,10 @@ type TProps = {
 const Header: React.FC<TProps> = ({ className }) => {
   return (
     <StyledWrapper className={className}>
-      <div className="header-items">
+      <div
+        className="header-items logo"
+        onClick={() => (window.location.href = "/")}
+      >
         <img src="gnb.png" alt="로고" width="100" />
       </div>
     </StyledWrapper>
@@ -24,5 +27,11 @@ const StyledWrapper = styled.header`
   .header-items {
     padding: 12px 16px;
     display: flex;
+  }
+
+  .logo {
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;
