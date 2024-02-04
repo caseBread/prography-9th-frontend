@@ -11,18 +11,28 @@ type TProps = {
     value: string;
     label: React.ReactNode;
   }[];
-  onSelect?: (option: any) => void;
+  onSelect: (option: string) => void;
+  defaultValue?: string;
 };
 
-const Dropdown: React.FC<TProps> = ({ className, options, onSelect }) => {
+const Dropdown: React.FC<TProps> = ({
+  className,
+  options,
+  onSelect,
+  defaultValue,
+}) => {
   return (
     <StyledWrapper
       className={className}
-      onChange={(e) => onSelect?.(e.currentTarget.value)}
+      onChange={(e) => onSelect(e.currentTarget.value)}
     >
-      {options?.map((option) => {
+      {options.map((option) => {
         return (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+            selected={defaultValue === option.value}
+          >
             {option.label}
           </option>
         );

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useSelectedCategoryStore } from "../../../store/categoryStore";
+import { useInfiniteScrollLimitStore } from "../../../store/limitStore";
 
 type TProps = {
   className?: string;
@@ -7,11 +8,14 @@ type TProps = {
 
 const ItemCount: React.FC<TProps> = ({ className }) => {
   const { meals } = useSelectedCategoryStore();
+  const { infiniteScrollLimit } = useInfiniteScrollLimitStore();
 
-  // TODO : 무한스크롤구현시 20은 바뀌어야함.
+  const viewedLimit =
+    infiniteScrollLimit < meals.length ? infiniteScrollLimit : meals.length;
+
   return (
     <StyledWrapper className={className}>
-      20 / {meals?.length} 개 조회
+      {viewedLimit} / {meals.length} 개 조회
     </StyledWrapper>
   );
 };

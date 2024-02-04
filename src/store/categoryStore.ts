@@ -1,6 +1,12 @@
 import axios from "axios";
 import create from "zustand";
 import { MealsResponse } from "../type/meal";
+import { QUERY_STORE } from "../constants/queryStore";
+
+// NOTE : 초기값을 query string으로부터 가져온다.
+const urlParams = new URLSearchParams(window.location.search);
+const defaultQuerySortType = urlParams.get(QUERY_STORE.SORT_TYPE) ?? "desc";
+const defaultQueryCategories = urlParams.get("category")?.split(",") ?? [];
 
 const fetchMealsByCategory = async (category: string) => {
   try {
@@ -33,6 +39,7 @@ interface CategoryState {
   meals: Meal[];
   sortTypeList: { value: string; label: string }[];
   selectedSortType: string;
+
   setSelectedSortType: (sortType: string) => void;
   toggleCategory: (name: string) => void;
   isCategoryExists: (name: string) => boolean;
@@ -48,13 +55,26 @@ export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
       } else if (sortType === "desc") {
         return b.name.localeCompare(a.name);
       } else {
-        return a.id.localeCompare(b.id);
+        return b.id.localeCompare(a.id);
       }
     });
   };
 
+  defaultQueryCategories.forEach(async (category) => {
+    if (!category) return;
+
+    if (!mealsCache[category]) {
+      const newMeals = await fetchMealsByCategory(category);
+      mealsCache[category] = newMeals;
+      set((state) => ({
+        ...state,
+        meals: sortMeals([...get().meals, ...newMeals], state.selectedSortType),
+      }));
+    }
+  });
+
   return {
-    categories: [],
+    categories: defaultQueryCategories,
     meals: [],
     sortTypeList: [
       {
@@ -66,11 +86,12 @@ export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
         label: "이름 오름차순",
       },
       {
-        value: "latest",
+        value: "new",
         label: "최신순",
       },
     ],
-    selectedSortType: "desc",
+    selectedSortType: defaultQuerySortType,
+    mealsLimit: 0,
     setSelectedSortType: (sortType) => {
       set((state) => {
         return {
@@ -83,7 +104,6 @@ export const useSelectedCategoryStore = create<CategoryState>((set, get) => {
     toggleCategory: async (name) => {
       const isExisting = get().categories.includes(name);
       if (isExisting) {
-        // 카테고리 제거
         set((state) => ({
           categories: state.categories.filter((category) => category !== name),
           meals: state.meals.filter((meal) => meal.category !== name),

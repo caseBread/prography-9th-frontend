@@ -3,6 +3,9 @@ import axios from "axios";
 import styled from "styled-components";
 import { CategoriesResponse } from "../../../../type/category";
 import CategoryItem from "./CategoryItem";
+import CategorySkeletonItem from "./CategorySkeletonItem";
+
+const SKELETON_SIZE = 14;
 
 type TProps = {
   className?: string;
@@ -19,7 +22,17 @@ const CategoryFilter: React.FC<TProps> = ({ className }) => {
     },
   });
 
-  if (isLoading) return null; // TODO : 스켈레톤
+  if (isLoading) {
+    // 로딩 중일 때 스켈레톤 표시
+    return (
+      <StyledWrapper className={className}>
+        {Array.from({ length: SKELETON_SIZE }).map((_, index) => (
+          <CategorySkeletonItem />
+        ))}
+      </StyledWrapper>
+    );
+  }
+
   if (isError) return null;
 
   return (

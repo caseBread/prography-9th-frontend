@@ -4,6 +4,8 @@ import ItemCount from "../feature/figure/ItemCount";
 import Dropdown from "../dropdown/Dropdown";
 import useSortSizeStore from "../../store/sortStore";
 import { useSelectedCategoryStore } from "../../store/categoryStore";
+import useQueryParams from "../../hooks/useQueryParams";
+import { QUERY_STORE } from "../../constants/queryStore";
 
 type TProps = {
   className?: string;
@@ -11,7 +13,14 @@ type TProps = {
 
 const Nav: React.FC<TProps> = ({ className }) => {
   const { sortSizeList, setSelectedSortSize } = useSortSizeStore();
-  const { sortTypeList, setSelectedSortType } = useSelectedCategoryStore();
+  const { sortTypeList, selectedSortType, setSelectedSortType } =
+    useSelectedCategoryStore();
+  const { setQueryParam } = useQueryParams();
+
+  const handleSelectSortType = (sortType: string) => {
+    setSelectedSortType(sortType);
+    setQueryParam(QUERY_STORE.SORT_TYPE, sortType);
+  };
 
   return (
     <StyledWrapper className={className}>
@@ -19,7 +28,11 @@ const Nav: React.FC<TProps> = ({ className }) => {
       <div className="space-between">
         <ItemCount />
         <div className="space-between sort-wrapper">
-          <Dropdown options={sortTypeList} onSelect={setSelectedSortType} />
+          <Dropdown
+            options={sortTypeList}
+            onSelect={handleSelectSortType}
+            defaultValue={selectedSortType}
+          />
           <Dropdown options={sortSizeList} onSelect={setSelectedSortSize} />
         </div>
       </div>
