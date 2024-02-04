@@ -9,7 +9,14 @@ nvm install
 npm install
 npm start
 ```
-(nvm이 없다면, node : v18.16.1 / npm v9.5.1 으로 세팅 부탁드립니다.)
+(nvm이 설치되어있지 않으시다면, node : v18.16.1 / npm v9.5.1 으로 세팅 후 아래 명령어를 부탁드립니다.)
+
+```
+git clone https://github.com/caseBread/prography-9th-frontend.git
+cd prography-9th-frontend
+npm install
+npm start
+```
 
 ## 구현 스펙
 
