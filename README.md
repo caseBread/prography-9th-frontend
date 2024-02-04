@@ -2,7 +2,7 @@
 
 ## 로컬 실행 방법
 
-1. `nvm use` (nvm이 없다면, node : v18.16.1 / npm v9.5.1 세팅)
+1. `nvm use` (nvm이 없다면, node : v18.16.1 / npm v9.5.1 으로 세팅 부탁드립니다.)
 
 2. `npm install`
 
