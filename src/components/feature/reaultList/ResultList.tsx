@@ -5,6 +5,7 @@ import useSortSizeStore from "../../../store/sortStore";
 import { useInfiniteScroll } from "../../../hooks/useInfiniteScroll";
 import { useInfiniteScrollLimitStore } from "../../../store/limitStore";
 import { useEffect } from "react";
+import { MOBILE_SCREEN } from "../../../constants/width";
 
 const PAGE_SIZE = 20;
 
@@ -42,4 +43,8 @@ const StyledWrapper = styled.div<{ gridSize: string }>`
   width: 100%;
   grid-template-columns: repeat(${({ gridSize }) => gridSize}, 1fr);
   gap: 16px;
+
+  @media ${MOBILE_SCREEN} {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;

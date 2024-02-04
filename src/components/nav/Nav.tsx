@@ -6,6 +6,7 @@ import useSortSizeStore from "../../store/sortStore";
 import { useSelectedCategoryStore } from "../../store/categoryStore";
 import useQueryParams from "../../hooks/useQueryParams";
 import { QUERY_STORE } from "../../constants/queryStore";
+import { MOBILE_SCREEN } from "../../constants/width";
 
 type TProps = {
   className?: string;
@@ -33,7 +34,11 @@ const Nav: React.FC<TProps> = ({ className }) => {
             onSelect={handleSelectSortType}
             defaultValue={selectedSortType}
           />
-          <Dropdown options={sortSizeList} onSelect={setSelectedSortSize} />
+          <Dropdown
+            className="mobile-hidden"
+            options={sortSizeList}
+            onSelect={setSelectedSortSize}
+          />
         </div>
       </div>
     </StyledWrapper>
@@ -49,5 +54,11 @@ const StyledWrapper = styled.nav`
     display: flex;
     justify-content: space-between;
     gap: 4px;
+  }
+
+  @media ${MOBILE_SCREEN} {
+    .mobile-hidden {
+      display: none;
+    }
   }
 `;
