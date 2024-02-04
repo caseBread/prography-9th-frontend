@@ -8,6 +8,14 @@
 
 3. `npm start`
 
+## 구현 스펙
+
+- React
+- Typescript
+- Zustand
+- @tanstack/react-query
+- styled-components
+
 ## 구현 목록
 
 1. 전체 카테고리 조회 API를 호출해 카테고리 리스트(strCategory)를 노출합니다. ✅
